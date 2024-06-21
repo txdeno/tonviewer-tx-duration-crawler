@@ -1,0 +1,20 @@
+{
+  "name": "tx-duration-crawler",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "src/crawler.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --ignore-watch node_modules src/crawler.ts"
+  },
+  "dependencies": {
+    "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
+    "fs": "^0.0.1-security",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.5",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.5.2"
+  }
+}
