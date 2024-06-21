@@ -7,8 +7,31 @@ import { sleep } from "./utils/sleep";
 
 type Result = {
   url: string;
-  duration: string;
+  duration: number;
 };
+
+function convertToSeconds(duration: string) {
+  let totalSeconds = 0;
+
+  // Split the duration string by spaces to handle multiple parts (e.g., "1min: 1s")
+  const parts = duration.split(" ");
+
+  parts.forEach((part) => {
+    // If the part contains "min:", extract the minutes and seconds
+    if (part.includes("min:")) {
+      const [min, sec] = part.split("min:");
+      totalSeconds += parseInt(min) * 60; // Convert minutes to seconds and add to total
+      if (sec) {
+        totalSeconds += parseInt(sec); // Add the remaining seconds to total
+      }
+    } else if (part.includes("s")) {
+      // If the part is only seconds
+      totalSeconds += parseInt(part);
+    }
+  });
+
+  return totalSeconds;
+}
 
 async function crawler(url: string): Promise<Result | undefined> {
   const response = await axios.get(url);
@@ -20,11 +43,12 @@ async function crawler(url: string): Promise<Result | undefined> {
   const durationText = $('div:contains("Duration:")').text();
 
   // Use a regular expression to extract the duration
-  const match = durationText.match(/Duration: (\d+s)/);
+  const match = durationText.match(/Duration:\s*([\d\smin:]+s)/);
 
   // Check if a match was found and extract the duration
   if (match && match[1]) {
-    const duration = match[1];
+    const duration = convertToSeconds(match[1]);
+
     return {
       url,
       duration,
